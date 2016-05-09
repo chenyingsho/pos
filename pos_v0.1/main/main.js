@@ -1,40 +1,76 @@
-//TODO: Please write code in this file.
 function printReceipt(inputs) {
-  //将统计之后的结果放进temp数组中
-  var temp=[];
+
+  var statistics = getStatistics(inputs);
+  var newItem = buildNewItem(statistics);
+  var totalPrice = getTotalPrice(newItem);
+  var lastResult = getNewString(totalPrice);
+  console.log(lastResult);
+
+}
+
+function getStatistics(inputs) {
+  var countItem=[];
+
   for(var i=0;i<inputs.length;i++){
-    var exist=find(inputs[i].barcode,temp);
+    var exist=findExist(inputs[i].barcode,countItem);
     if(exist){
       exist.count++;
     }
-    else{
-      temp.push({name:inputs[i].name,count:1,unit:inputs[i].unit,price:inputs[i].price,barcode:inputs[i].barcode});
+    else {
+      countItem.push({Item:inputs[i],count:1})
     }
   }
-  //遍历temp数组将结果打印出来
-  var result='';
-  result="***<没钱赚商店>收据***\n";
-  for(var i=0;i<temp.length;i++){
-    var total=1;
-    total=temp[i].price*temp[i].count;
-    result+="名称："+temp[i].name+"，数量："+temp[i].count+temp[i].unit+"，单价："+temp[i].price.toFixed(2)+"(元)，小计："+total.toFixed(2)+"(元)\n";
-  }
-  result+="----------------------\n";
-  var totalprice=0;
-  for(var j=0;j<temp.length;j++) {
-    totalprice+=temp[j].price*temp[j].count;
-  }
-  result+="总计：" +totalprice.toFixed(2)+"(元)\n";
-  result+="**********************";
-  console.log(result);
+
+  return countItem;
 }
-function find(elem,temp) {   //判断此元素是否在temp数组中存在
-  var temp1;
-  for(var i=0;i<temp.length;i++){
-    if(elem===temp[i].barcode){
-      temp1=temp[i];
+
+function findExist(elem,countItem) {
+  var existTemp;
+
+  for (var i = 0; i < countItem.length; i++) {
+    if (elem === countItem[i].Item.barcode) {
+      existTemp = countItem[i];
     }
   }
-  return temp1;
+
+  return existTemp;
+}
+
+function buildNewItem(countItem) {
+  var cart = [];
+
+  for (var i = 0; i < countItem.length; i++) {
+    var subtotal = countItem[i].Item.price * countItem[i].count;
+    cart.push({countItem: countItem[i], subtotal: subtotal});
+  }
+
+  return cart;
+}
+
+function getTotalPrice(cart) {
+  var totalItem;
+  var total = 0;
+
+  for (var i = 0; i < cart.length; i++)
+    total = total + cart[i].subtotal;
+  totalItem = {cart: cart, total: total};
+
+  return totalItem;
+}
+
+function getNewString(totalItem) {
+  var result = "***<没钱赚商店>收据***\n";
+
+  for (var i = 0; i < totalItem.cart.length; i++) {
+    result += "名称：" + totalItem.cart[i].countItem.Item.name + "，数量：" +
+      totalItem.cart[i].countItem.count + totalItem.cart[i].countItem.Item.unit
+      + "，单价：" + totalItem.cart[i].countItem.Item.price.toFixed(2) + "(元)，小计：" +
+      totalItem.cart[i].subtotal.toFixed(2) + "(元)\n";
+  }
+  result += "----------------------\n";
+  result += "总计：" + totalItem.total.toFixed(2) + "(元)\n";
+  result += "**********************";
+
+  return result;
 }
 
