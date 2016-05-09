@@ -1,20 +1,45 @@
-//TODO: Please write code in this file.
 function printReceipt(inputs) {
-  var result='';
 
-  result="***<没钱赚商店>收据***\n";
-  for(var i=0;i<inputs.length;i++){
-    var total=1;
-    total=inputs[i].price*inputs[i].count;
-    result+="名称："+inputs[i].name+"，数量："+inputs[i].count+inputs[i].unit+"，单价："+inputs[i].price.toFixed(2)+"(元)，小计："+total.toFixed(2)+"(元)\n";
-  }
-  result+="----------------------\n";
-  var totalprice=0;
-  for(var j=0;j<inputs.length;j++) {
+  var NewItem = buildNewItem(inputs);
+  var TotalPrice = getTotalPrice(NewItem);
+  var LastResult = getNewString(TotalPrice);
+  console.log(LastResult);
+}
 
-    totalprice+=inputs[j].price*inputs[j].count;
+function buildNewItem(inputs) {
+  var item = [];
+
+  for (var i = 0; i < inputs.length; i++) {
+    var subtotal = inputs[i].price * inputs[i].count;
+    item.push({inputs: inputs[i], subtotal: subtotal});
   }
-  result+="总计：" +totalprice.toFixed(2)+"(元)\n";
-  result+="**********************";
-  console.log(result);
+
+  return item;
+}
+
+function getTotalPrice(item) {
+  var totalItem;
+  var total = 0;
+
+  for (var i = 0; i < item.length; i++)
+    total = total + item[i].subtotal;
+  totalItem = {cart: item, total: total};
+
+  return totalItem;
+}
+
+function getNewString(totalItem) {
+  var result = "***<没钱赚商店>收据***\n";
+
+  for (var i = 0; i < totalItem.cart.length; i++) {
+    result += "名称：" + totalItem.cart[i].inputs.name + "，数量：" +
+      totalItem.cart[i].inputs.count + totalItem.cart[i].inputs.unit
+      + "，单价：" + totalItem.cart[i].inputs.price.toFixed(2) + "(元)，小计：" +
+      totalItem.cart[i].subtotal.toFixed(2) + "(元)\n";
+  }
+  result += "----------------------\n";
+  result += "总计：" + totalItem.total.toFixed(2) + "(元)\n";
+  result += "**********************";
+
+  return result;
 }
