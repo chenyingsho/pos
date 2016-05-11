@@ -1,138 +1,139 @@
 function printReceipt(inputs) {
 
-  var statistics = getStatistics(inputs);
-  var newItem = buildNewItem(statistics);
-  var totalPrice = getTotalPrice(newItem);
-  var totalPromotionPrice = getPromotion(totalPrice);
-  var result = getNewString(totalPromotionPrice);
+  var statistics = GetStatistics(inputs);
+  var NewItem = BuildNewItem(statistics);
+  var TotalPrice = GetTotalPrice(NewItem);
+  var TotalPromotionPrice = GetPromotion(TotalPrice);
+  var result = GetNewString(TotalPromotionPrice);
   console.log(result);
 
 }
 
-function getStatistics(inputs) {
-  var countItem = [];
+function GetStatistics(inputs) {
+  var CountItem = [];
   var list = loadAllItems();
 
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].charAt(10) === '-') {
       for (var j = 0; j < list.length; j++) {
         if (inputs[i].slice(0, 10) === list[j].barcode) {
-          countItem.push({Item: list[j], count: inputs[i].slice(11)});
+          CountItem.push({Item: list[j], count: inputs[i].slice(11)});
         }
       }
     }
     else {
-      var exist = findExist(inputs[i], countItem);
+      var exist = FindExist(inputs[i], CountItem);
       if (exist) {
         exist.count++;
       }
       else {
-        for (var existCount = 0; existCount < list.length; existCount++) {
-          if (inputs[i] === list[existCount].barcode)
-            countItem.push({Item: list[existCount], count: 1});
+        for (var ExistCount = 0; ExistCount < list.length; ExistCount++) {
+          if (inputs[i] === list[ExistCount].barcode)
+            CountItem.push({Item: list[ExistCount], count: 1});
         }
       }
     }
   }
 
-  return countItem;
+  return CountItem;
 }
 
-function findExist(elem, countItem) {
-  var existTemp;
+function FindExist(elem, CountItem) {
+  var ExistTemp;
 
-  for (var i = 0; i < countItem.length; i++) {
-    if (elem === countItem[i].Item.barcode) {
-      existTemp = countItem[i];
+  for (var i = 0; i < CountItem.length; i++) {
+    if (elem === CountItem[i].Item.barcode) {
+      ExistTemp = CountItem[i];
     }
   }
 
-  return existTemp;
+  return ExistTemp;
 }
 
-function buildNewItem(countItem) {
+function BuildNewItem(CountItem) {
   var cart = [];
 
-  for (var i = 0; i < countItem.length; i++) {
-    var subtotal = countItem[i].Item.price * countItem[i].count;
-    cart.push({countItem: countItem[i], subtotal: subtotal});
+  for (var i = 0; i < CountItem.length; i++) {
+    var subtotal = CountItem[i].Item.price * CountItem[i].count;
+    cart.push({CountItem: CountItem[i], subtotal: subtotal});
   }
 
   return cart;
 }
 
-function getTotalPrice(cart) {
-  var totalItem;
+function GetTotalPrice(cart) {
+  var TotalItem;
   var total = 0;
 
-  for (var i = 0; i < cart.length; i++)
+  for (var i = 0; i < cart.length; i++) {
     total = total + cart[i].subtotal;
-  totalItem = {cart: cart, total: total};
+  }
+  TotalItem = {cart: cart, total: total};
 
-  return totalItem;
+  return TotalItem;
 }
 
-function getPromotion(totalItem) {
-  var totalPromotion = 0;
-  var finalTotalItem;
-  var promotionList = loadPromotions();
+function GetPromotion(TotalItem) {
+  var TotalPromotion = 0;
+  var FinalTotalItem;
+  var PromotionList = loadPromotions();
 
-  for (var i = 0; i < totalItem.cart.length; i++) {
-    for (var j = 0; j < promotionList[0].barcodes.length; j++) {
-      if (totalItem.cart[i].countItem.Item.barcode === promotionList[0].barcodes[j]) {
-        var promotionItem = parseInt(totalItem.cart[i].countItem.count / 3);
-        var promotionPrice = promotionItem * totalItem.cart[i].countItem.Item.price;
-        totalItem.cart[i].subtotal -= promotionPrice;
-        totalPromotion += promotionPrice;
+  for (var i = 0; i < TotalItem.cart.length; i++) {
+    for (var j = 0; j < PromotionList[0].barcodes.length; j++) {
+      if (TotalItem.cart[i].CountItem.Item.barcode === PromotionList[0].barcodes[j]) {
+        var PromotionItem = parseInt(TotalItem.cart[i].CountItem.count / 3);
+        var PromotionPrice = PromotionItem * TotalItem.cart[i].CountItem.Item.price;
+        TotalItem.cart[i].subtotal -= PromotionPrice;
+        TotalPromotion += PromotionPrice;
       }
     }
   }
-  finalTotalItem = {totalItem: totalItem, totalPromotion: totalPromotion};
+  FinalTotalItem = {TotalItem: TotalItem, TotalPromotion: TotalPromotion};
 
-  return finalTotalItem;
+  return FinalTotalItem;
 }
 
-function getTime() {
-  var myDate = new Date();
-  var month = myDate.getMonth() + 1;
-  var day = myDate.getDate();
-  var seconds = myDate.getSeconds();
+function GetTime() {
+  var MyDate = new Date();
+  var month = MyDate.getMonth() + 1;
+  var day = MyDate.getDate();
+  var seconds = MyDate.getSeconds();
 
   if (month < 10) {
-    var strMonth = '0' + month;
+    var StrMonth = '0' + month;
   }
 
   if (seconds < 10) {
-    var strSeconds = '0' + seconds;
+    var StrSeconds = '0' + seconds;
   }
   else {
-    strSeconds = seconds;
+    StrSeconds = seconds;
   }
 
 
-  var time = myDate.getFullYear() + '年' + strMonth + '月' + day + '日 ' + myDate.getHours() + ':' +
-    myDate.getMinutes() + ':' + seconds;
+  var time = MyDate.getFullYear() + '年' + StrMonth + '月' + day + '日 ' + MyDate.getHours() + ':' +
+    MyDate.getMinutes() + ':' + seconds;
 
   return time;
 }
 
-function getNewString(finalTotalItem) {
-  var totalPromotionPrice = 0;
+function GetNewString(FinalTotalItem) {
+  var TotalPromotionPrice = 0;
   var result = "***<没钱赚商店>收据***\n";
-  var dateInTime = getTime();
+  var DateInTime = GetTime();
 
-  result += "打印时间：" + dateInTime + '\n';
+  result += "打印时间：" + DateInTime + '\n';
   result += '----------------------\n';
-  for (var i = 0; i < finalTotalItem.totalItem.cart.length; i++) {
-    result += "名称：" + finalTotalItem.totalItem.cart[i].countItem.Item.name + "，数量：" +
-      finalTotalItem.totalItem.cart[i].countItem.count + finalTotalItem.totalItem.cart[i].countItem.Item.unit
-      + "，单价：" + finalTotalItem.totalItem.cart[i].countItem.Item.price.toFixed(2) + "(元)，小计：" +
-      finalTotalItem.totalItem.cart[i].subtotal.toFixed(2) + "(元)\n";
+  for (var i = 0; i < FinalTotalItem.TotalItem.cart.length; i++) {
+    result += "名称：" + FinalTotalItem.TotalItem.cart[i].CountItem.Item.name + "，数量：" +
+      FinalTotalItem.TotalItem.cart[i].CountItem.count + FinalTotalItem.TotalItem.cart[i].CountItem.Item.unit
+      + "，单价：" + FinalTotalItem.TotalItem.cart[i].CountItem.Item.price.toFixed(2) + "(元)，小计：" +
+      FinalTotalItem.TotalItem.cart[i].subtotal.toFixed(2) + "(元)\n";
   }
   result += "----------------------\n";
-  totalPromotionPrice = finalTotalItem.totalItem.total - finalTotalItem.totalPromotion;
-  result += "总计：" + totalPromotionPrice.toFixed(2) + "(元)\n";
-  result += "节省：" + finalTotalItem.totalPromotion.toFixed(2) + "(元)\n";
+  TotalPromotionPrice = FinalTotalItem.TotalItem.total - FinalTotalItem.TotalPromotion;
+  result += "总计：" + TotalPromotionPrice.toFixed(2) + "(元)\n";
+  result += "节省：" + FinalTotalItem.TotalPromotion.toFixed(2) + "(元)\n";
   result += "**********************";
 
   return result;
