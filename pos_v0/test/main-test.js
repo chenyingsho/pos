@@ -1,7 +1,7 @@
-describe('pos', function() {
+describe('pos', function () {
   var inputs;
 
-  beforeEach(function() {
+  beforeEach(function () {
     inputs = [
       {
         barcode: 'ITEM000000',
@@ -27,7 +27,7 @@ describe('pos', function() {
     ];
   });
 
-  it('should print correct text', function() {
+  it('should print correct text', function () {
 
     spyOn(console, 'log');
 
@@ -45,3 +45,160 @@ describe('pos', function() {
     expect(console.log).toHaveBeenCalledWith(expectText);
   });
 });
+
+describe('buildNewItem', function () {
+  var inputs;
+
+  beforeEach(function () {
+    inputs = [
+      {
+        barcode: 'ITEM000000',
+        name: '可口可乐',
+        unit: '瓶',
+        price: 3.00,
+        count: 5
+      },
+      {
+        barcode: 'ITEM000001',
+        name: '雪碧',
+        unit: '瓶',
+        price: 3.00,
+        count: 2
+      },
+      {
+        barcode: 'ITEM000004',
+        name: '电池',
+        unit: '个',
+        price: 2.00,
+        count: 1
+      }
+    ];
+  });
+
+  it('should print buildNewItem', function () {
+
+
+    var newBuildNewItem = buildNewItem(inputs);
+    var newItem = [{
+      inputs: {
+        barcode: 'ITEM000000',
+        name: '可口可乐',
+        unit: '瓶',
+        price: 3.00,
+        count: 5
+      },
+      subtotal: 15.00
+    },
+      {
+        inputs: {
+          barcode: 'ITEM000001',
+          name: '雪碧',
+          unit: '瓶',
+          price: 3.00,
+          count: 2
+        },
+        subtotal: 6.00
+      },
+      {
+        inputs: {
+          barcode: 'ITEM000004',
+          name: '电池',
+          unit: '个',
+          price: 2.00,
+          count: 1
+        },
+        subtotal: 2.00
+      }];
+
+    expect(newBuildNewItem).toEqual(newItem);
+  });
+});
+
+describe('getTotalPrice', function () {
+  var item;
+
+  beforeEach(function () {
+    item = [{
+      inputs: {
+        barcode: 'ITEM000000',
+        name: '可口可乐',
+        unit: '瓶',
+        price: 3.00,
+        count: 5
+      },
+      subtotal: 15.00
+    },
+      {
+        inputs: {
+          barcode: 'ITEM000001',
+          name: '雪碧',
+          unit: '瓶',
+          price: 3.00,
+          count: 2
+        },
+        subtotal: 6.00
+      },
+      {
+        inputs: {
+          barcode: 'ITEM000004',
+          name: '电池',
+          unit: '个',
+          price: 2.00,
+          count: 1
+        },
+        subtotal: 2.00
+      }];
+  });
+
+  it('should print getTotalPrice', function () {
+
+
+    var newGetTotalPrice = getTotalPrice(item);
+    var newTotalItem =
+    {
+      cart: [{
+        inputs: {
+          barcode: 'ITEM000000',
+          name: '可口可乐',
+          unit: '瓶',
+          price: 3.00,
+          count: 5
+        }
+        ,
+        subtotal: 15.00
+      }
+        ,
+        {
+          inputs: {
+            barcode: 'ITEM000001',
+            name: '雪碧',
+            unit: '瓶',
+            price: 3.00,
+            count: 2
+          }
+          ,
+          subtotal: 6.00
+        }
+        ,
+
+        {
+          inputs: {
+            barcode: 'ITEM000004',
+            name: '电池',
+            unit: '个',
+            price: 2.00,
+            count: 1
+          }
+
+          ,
+          subtotal: 2.00
+        }
+      ],
+      total: 23.00
+
+    };
+
+    expect(newGetTotalPrice).toEqual(newTotalItem);
+  });
+})
+;
